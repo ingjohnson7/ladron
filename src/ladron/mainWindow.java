@@ -7,6 +7,13 @@ package ladron;
 
 import java.io.*;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
+import java.net.URLConnection;
 
 /**
  *
@@ -20,11 +27,14 @@ public class mainWindow extends javax.swing.JFrame {
     private final String TAG = "-mainWindow-";
     private BufferedReader fi;
     private final JFileChooser fc;
+    //private HttpURLConnection http;
+    private String uri;
     
     public mainWindow() {
         initComponents();
         
         fc  = new JFileChooser();
+        targetList.setSelectedIndex(0);
     }
 
     /**
@@ -44,7 +54,7 @@ public class mainWindow extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
+        targetList = new javax.swing.JList<>();
         jLabel2 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
@@ -71,6 +81,11 @@ public class mainWindow extends javax.swing.JFrame {
 
         jButton2.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jButton2.setText("Start");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(153, 153, 153));
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -79,12 +94,13 @@ public class mainWindow extends javax.swing.JFrame {
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
         jLabel1.setText("Select target");
 
-        jList1.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Netflix", "Youtube", "Hulu" };
+        targetList.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Instagram", "Netflix", "Youtube", "Hulu" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
-        jScrollPane2.setViewportView(jList1);
+        targetList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane2.setViewportView(targetList);
 
         jLabel2.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(0, 0, 0));
@@ -184,21 +200,34 @@ public class mainWindow extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         System.out.println(TAG + " button clicked");
+        fc.setFileFilter(new FileNameExtensionFilter("Text files", "txt"));
+       
+        int result = fc.showOpenDialog(this);
         
-        //fi = new FileInputStream("");
-        fc.showOpenDialog(this);
-        
-        File file = fc.getSelectedFile();
-        
-        filePath.setText(file.getAbsolutePath());
-        
-        handleFile(file);
+        if(result == JFileChooser.APPROVE_OPTION){
+            File file = fc.getSelectedFile();
+            
+            if(file.getName().endsWith(".txt")){
+                handleFile(file); 
+                
+            }else{
+                JOptionPane.showMessageDialog(this, "Invalid file type, only .txt allowed");
+            }              
+               
+        }
         
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        
+        sendHttpRequest();
+        
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     
     private void handleFile(File file){
         try{
+            filePath.setText(file.getAbsolutePath());
             
             System.out.println(TAG + " name of the file "+ file.getName());
             
@@ -221,6 +250,69 @@ public class mainWindow extends javax.swing.JFrame {
         
     }
     
+    private String getTargetUrl(){
+        
+        String target = targetList.getSelectedValue();
+        String urlString = "https://www.google.com";
+        
+        switch (target) {
+            case "Instagram":
+                urlString = "https://www.instagram.com/accounts/login/ajax/";
+                break;
+            case "Netflix":
+                urlString = "NETFLIX_ENDPOINT";
+                break;
+            case "Hulu":
+                urlString = "HULU_ENDPOINT";
+                break;
+            default:
+                break;
+        }
+
+        return urlString;
+    }
+
+    private void sendHttpRequest() {
+
+        URL url;
+        
+        try {
+            url = new URL(getTargetUrl());
+            
+            txtaFileDetails.append("[URL TO ATTACK] -> "+url.toString()+"\n");
+            
+            HttpURLConnection http = new HttpURLConnection(url) {
+                @Override
+                public void disconnect() {
+                    System.out.println("Disconnected");
+                }
+                
+                @Override
+                public boolean usingProxy() {
+                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                }
+                
+                @Override
+                public void connect(){
+                    System.out.println("Connected");
+                }
+            };
+            
+            http.setRequestMethod("POST");
+            //http.setDoOutput(true);
+            http.setDoInput(true);
+            http.addRequestProperty("username", "lololo");
+            http.addRequestProperty("password", "lololo");  
+            
+            http.connect();
+            System.out.println("RESPONSE -> "+http.getResponseMessage());
+            
+        } catch (IOException  e) {
+            System.out.println("ERROR -> " + e.getMessage());
+        }
+
+    }
+
     /**
      * @param args the command line arguments
      */
@@ -263,13 +355,13 @@ public class mainWindow extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JList<String> jList1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
+    private javax.swing.JList<String> targetList;
     private javax.swing.JTextArea txtaFileDetails;
     // End of variables declaration//GEN-END:variables
 }
