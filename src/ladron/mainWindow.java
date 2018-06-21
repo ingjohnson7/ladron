@@ -10,11 +10,9 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
-import java.net.URLConnection;
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 /**
  *
  * @author qilobit
@@ -95,7 +93,7 @@ public class mainWindow extends javax.swing.JFrame {
         jLabel1.setText("Select target");
 
         targetList.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Instagram", "Netflix", "Youtube", "Hulu" };
+            String[] strings = { "Instagram", "Netflix", "Youtube", "GIT" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
@@ -128,29 +126,32 @@ public class mainWindow extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addGap(37, 37, 37))
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3)
                     .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(32, 32, 32))
+                .addContainerGap(197, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(44, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(114, Short.MAX_VALUE))
         );
 
         filePath.setBackground(new java.awt.Color(255, 255, 255));
@@ -163,18 +164,19 @@ public class mainWindow extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(filePath))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jProgressBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(jButton1)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(filePath))
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jProgressBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 523, Short.MAX_VALUE))
+                        .addComponent(jScrollPane1)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -237,17 +239,31 @@ public class mainWindow extends javax.swing.JFrame {
             
             while((line = fi.readLine()) != null){
                 txtaFileDetails.append(line+"\n");
+                identityEmail(line);
             }
             
             System.out.println("End of file");
             
             
-        }catch(FileNotFoundException e){
+        }catch(IOException e){
             System.out.println(TAG + " ERROR -> "+e.getMessage());
-        }catch(IOException ioe){
-            System.out.println(TAG + " ERROR -> "+ioe.getMessage());
         }
         
+    }
+    
+    private void identityEmail(String line){
+        String email = "";
+        Pattern pattern = Pattern.compile("^[a-zA-Z0-9_.]+@[a-zA-Z0-9_.]+[.[w]{2,5}]$");
+        Matcher m = pattern.matcher(line);
+        
+        if(m.matches()){
+            
+            System.out.println("Good email"+m.group());
+        }else{
+            System.out.println("Bad email");
+        }
+        
+        //return email;
     }
     
     private String getTargetUrl(){
@@ -262,8 +278,8 @@ public class mainWindow extends javax.swing.JFrame {
             case "Netflix":
                 urlString = "NETFLIX_ENDPOINT";
                 break;
-            case "Hulu":
-                urlString = "HULU_ENDPOINT";
+            case "GIT":
+                urlString = "https://api.github.com/users/10";
                 break;
             default:
                 break;
@@ -281,38 +297,51 @@ public class mainWindow extends javax.swing.JFrame {
             
             txtaFileDetails.append("[URL TO ATTACK] -> "+url.toString()+"\n");
             
-            HttpURLConnection http = new HttpURLConnection(url) {
-                @Override
-                public void disconnect() {
-                    System.out.println("Disconnected");
-                }
-                
-                @Override
-                public boolean usingProxy() {
-                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                }
-                
-                @Override
-                public void connect(){
-                    System.out.println("Connected");
-                }
-            };
+            HttpURLConnection http = (HttpURLConnection) url.openConnection();
             
             http.setRequestMethod("POST");
-            //http.setDoOutput(true);
+            http.setReadTimeout(7000);
+            
             http.setDoInput(true);
             http.addRequestProperty("username", "lololo");
             http.addRequestProperty("password", "lololo");  
             
             http.connect();
-            System.out.println("RESPONSE -> "+http.getResponseMessage());
+
+            txtaFileDetails.append("RESPONSE CODE -> " + http.getResponseCode() + "\n");
             
-        } catch (IOException  e) {
+            String serverResponse = readResponseFromServer(http.getInputStream());
+            
+            txtaFileDetails.append("RESPONSE RESPONSE -> " + serverResponse + "\n");
+            
+            
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(rootPane, "Error -> " + e.getMessage());
             System.out.println("ERROR -> " + e.getMessage());
         }
 
     }
+    
+    private String readResponseFromServer(InputStream stream){
+        String response = "";
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+            StringBuilder stringBuilder = new StringBuilder();
 
+            String line = "";
+            while ((line = reader.readLine()) != null) {
+                stringBuilder.append(line + "\n");
+            }
+            response = stringBuilder.toString();
+
+        } catch (IOException ioe) {
+            JOptionPane.showMessageDialog(rootPane, "Error -> " + ioe.getMessage());
+            System.err.println("EXCEPTION -> " + ioe.getMessage());
+        }
+
+        return response;
+    }
+    
     /**
      * @param args the command line arguments
      */
